@@ -14,7 +14,7 @@ Author: Klaus Grosser
 : GitHub: https://github.com/KlausGrosser
 
 Project Web Page:
-: https://klausgrosser.github.io/Warehouse-Management-System/
+: https://klausgrosser.github.io/Warehouse-Management-System/public/
 
 Development Setup:
 ```
