@@ -1,210 +1,147 @@
 package main.java.intro;
 
-public interface Repository {
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
-    String[] WAREHOUSE1 = {
-            "Brand new laptop",
-            "Exceptional monitor",
-            "Cheap tablet",
-            "Funny laptop",
-            "Second hand smartphone",
-            "Brand new smartphone",
-            "Cheap router",
-            "Second hand laptop",
-            "Elegant tablet",
-            "Funny tablet",
-            "Second hand headphones",
-            "Exceptional tablet",
-            "Brand new smartphone",
-            "Cheap mouse",
-            "Elegant headphones",
-            "Brand new headphones",
-            "Second hand smartphone",
-            "High quality smartphone",
-            "Brand new keyboard",
-            "Second hand headphones",
-            "Elegant router",
-            "Exceptional router",
-            "Second hand smartphone",
-            "Exceptional monitor",
-            "Almost new tablet",
-            "High quality monitor",
-            "Second hand monitor",
-            "Brand new keyboard",
-            "Almost new keyboard",
-            "High quality headphones",
-            "Elegant laptop",
-            "Elegant router",
-            "Almost new monitor",
-            "Almost new headphones",
-            "Second hand keyboard",
-            "Brand new tablet",
-            "Elegant laptop",
-            "Almost new keyboard",
-            "Exceptional router",
-            "High quality keyboard",
-            "Exceptional router",
-            "Elegant router",
-            "Cheap keyboard",
-            "High quality monitor",
-            "High quality keyboard",
-            "Funny keyboard",
-            "Cheap mouse",
-            "Cheap monitor",
-            "Funny headphones",
-            "Elegant mouse",
-            "Cheap smartphone",
-            "High quality mouse",
-            "Funny keyboard",
-            "Second hand monitor",
-            "Almost new router",
-            "Almost new mouse",
-            "Elegant smartphone",
-            "Second hand router",
-            "Second hand mouse",
-            "Second hand tablet",
-            "Exceptional tablet",
-            "High quality smartphone",
-            "Brand new headphones",
-            "Exceptional monitor",
-            "Elegant mouse",
-            "Cheap laptop",
-            "High quality smartphone",
-            "Cheap monitor",
-            "Funny monitor",
-            "Almost new mouse",
-            "Elegant headphones",
-            "Cheap mouse",
-            "Exceptional smartphone",
-            "Cheap monitor",
-            "Exceptional tablet",
-            "Almost new tablet",
-            "Second hand headphones",
-            "Cheap tablet",
-            "Elegant mouse",
-            "Second hand mouse",
-            "Cheap laptop",
-            "Cheap keyboard",
-            "Elegant router",
-            "Elegant headphones",
-            "Second hand monitor",
-            "Funny router",
-            "Elegant mouse",
-            "Elegant headphones",
-            "Brand new mouse",
-            "Exceptional tablet",
-            "Funny router",
-            "Second hand headphones",
-            "Brand new laptop",
-            "Second hand router",
-            "Cheap mouse",
-            "Funny keyboard",
-            "Elegant headphones",
-            "Brand new laptop",
-            "Elegant laptop",
-            "Second hand mouse"
-    };
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
-    String[] WAREHOUSE2 = {
-            "High quality tablet",
-            "Second hand headphones",
-            "Second hand laptop",
-            "Exceptional tablet",
-            "Exceptional headphones",
-            "Brand new smartphone",
-            "Elegant laptop",
-            "High quality tablet",
-            "Brand new headphones",
-            "Exceptional mouse",
-            "Cheap mouse",
-            "Cheap headphones",
-            "High quality headphones",
-            "Brand new keyboard",
-            "Brand new smartphone",
-            "Almost new mouse",
-            "Second hand router",
-            "High quality monitor",
-            "High quality smartphone",
-            "Second hand headphones",
-            "Elegant monitor",
-            "High quality mouse",
-            "Almost new keyboard",
-            "Exceptional headphones",
-            "High quality smartphone",
-            "Exceptional smartphone",
-            "High quality tablet",
-            "Cheap mouse",
-            "Cheap monitor",
-            "Funny monitor",
-            "Elegant monitor",
-            "Funny smartphone",
-            "Second hand mouse",
-            "Almost new headphones",
-            "Cheap headphones",
-            "High quality router",
-            "Exceptional keyboard",
-            "Funny keyboard",
-            "Exceptional laptop",
-            "Cheap keyboard",
-            "Second hand mouse",
-            "Elegant router",
-            "Cheap router",
-            "Funny mouse",
-            "Funny laptop",
-            "Elegant tablet",
-            "Exceptional mouse",
-            "Funny headphones",
-            "Elegant tablet",
-            "Second hand laptop",
-            "Brand new headphones",
-            "Second hand headphones",
-            "Cheap router",
-            "Exceptional mouse",
-            "Elegant router",
-            "Exceptional monitor",
-            "Exceptional keyboard",
-            "Funny headphones",
-            "Second hand headphones",
-            "Almost new router",
-            "Brand new tablet",
-            "Funny mouse",
-            "Elegant mouse",
-            "High quality router",
-            "Second hand keyboard",
-            "Second hand router",
-            "Brand new monitor",
-            "Funny mouse",
-            "Funny tablet",
-            "Elegant keyboard",
-            "Cheap router",
-            "Funny router",
-            "Second hand monitor",
-            "Elegant smartphone",
-            "Brand new monitor",
-            "Second hand monitor",
-            "Second hand keyboard",
-            "Cheap mouse",
-            "Brand new keyboard",
-            "Exceptional mouse",
-            "Elegant router",
-            "Brand new mouse",
-            "Exceptional keyboard",
-            "Elegant smartphone",
-            "Exceptional tablet",
-            "Second hand keyboard",
-            "Almost new headphones",
-            "Brand new tablet",
-            "Brand new tablet",
-            "Exceptional headphones",
-            "Funny smartphone",
-            "Funny smartphone",
-            "Second hand tablet",
-            "Cheap router",
-            "Almost new keyboard",
-            "Elegant router",
-            "Brand new tablet",
-            "High quality tablet",
-            "Almost new router",
-            "High quality monitor"
-    };
+/**
+ * The Data Repository
+ *
+ * @author riteshp
+ */
+public class Repository extends Item{
+
+
+  private static final List<Item> ITEM_LIST = new ArrayList<>();
+
+  /*
+   * Load item records from the data.json file
+   */
+  static {
+   //System.out.println("Loading items");
+    try (BufferedReader reader =
+        new BufferedReader(
+            new InputStreamReader(
+                Objects.requireNonNull(
+                    Repository.class.getClassLoader().getResourceAsStream("data.json"))))) {
+
+      Object data = JSONValue.parse(reader);
+      if (data instanceof JSONArray) {
+        JSONArray dataArray = (JSONArray) data;
+        for (Object obj : dataArray) {
+          if (obj instanceof JSONObject) {
+            JSONObject jsonData = (JSONObject) obj;
+            Item item = new Item();
+            item.setState(jsonData.get("state").toString());
+            item.setCategory(jsonData.get("category").toString());
+            item.setWarehouse(Integer.parseInt(jsonData.get("warehouse").toString()));
+            String date = jsonData.get("date_of_stock").toString();
+            // System.out.println("Item Date " + date);
+            item.setDateOfStock(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(date));
+            // System.out.println(item);
+
+            ITEM_LIST.add(item);
+          }
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Get All items available in the repository
+   *
+   * @return the list of items
+   */
+  public static List<Item> getAllItems() {
+    return ITEM_LIST;
+  }
+
+  // By Warehouse
+  /**
+   * Get the list of unique warehouse IDs
+   *
+   * @return the warehouses
+   */
+  public static Set<Integer> getWarehouses() {
+     Set<Integer> warehouses = new HashSet<>();
+     for(Item item: getAllItems()){
+       warehouses.add(item.getWarehouse());
+     }
+
+    return warehouses;
+  }
+
+  /**
+   * Get the list of all items in a specific warehouse
+   *
+   * @param warehouse the warehouse ID
+   * @return the items
+   */
+  public static List<Item> getItemsByWarehouse(int warehouse) {
+    return getItemsByWarehouse(warehouse,getAllItems());
+  }
+
+  /**
+   * Get the list of items related to a specific warehouse in a given master-list
+   *
+   * @param warehouse the warehouse ID
+   * @return the items
+   */
+  public static List<Item> getItemsByWarehouse(int warehouse, List<Item> masterList) {
+    List<Item> items = new ArrayList<>();
+      for (Item item : masterList) {
+        if(item.getWarehouse() == warehouse){
+          items.add(item);
+        }
+      }
+    return items;
+  }
+
+
+  // By Category
+  /**
+   * Get the list of unique Categories
+   *
+   * @return the categories
+   */
+  public static Set<String> getCategories() {
+   Set<String> categories = new HashSet<>();
+   for(Item items : getAllItems()){
+     categories.add(items.getCategory());
+   }
+    return categories;
+  }
+
+  /**
+   * Get the list of all items of a specific category
+   *
+   * @param category the category
+   * @return the items
+   */
+  public static List<Item> getItemsByCategory(String category) {
+    return getItemsByCategory(category,getAllItems());
+  }
+
+  /**
+   * Get the list of items of a specific category in a given master-list
+   *
+   * @param category the category
+   * @return the items
+   */
+  public static List<Item> getItemsByCategory(String category, List<Item> masterList) {
+    List<Item> itemsByCategory = new ArrayList<>();
+    for (Item item : masterList) {
+      if(Objects.equals(item.getCategory(), category)){
+        itemsByCategory.add(item);
+      }
+    }
+    return itemsByCategory;
+  }
 }
