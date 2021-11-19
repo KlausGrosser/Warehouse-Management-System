@@ -8,7 +8,6 @@ import main.java.data.StockRepository;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static main.java.data.PersonnelRepository.getAllPersons;
 import static main.java.data.PersonnelRepository.isUserValid;
 
 /**
