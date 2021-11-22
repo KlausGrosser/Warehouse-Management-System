@@ -451,7 +451,7 @@ if(this.confirm("Welcome to SWIP Warehouse Management System.\nAre you an employ
         int result = 0;
         do{
             System.out.print("Type the number of the category to browse: ");
-            while(!reader.hasNextInt()) { //repeat until a number is entered.
+            while(!reader.hasNextInt()) {
                 String input = reader.nextLine();
                 System.out.println("\n**************************************************\n" +
                         input + " is not a valid operation. Please enter a number between 1 and " + getCategories().size()+"!\n" +
@@ -466,8 +466,8 @@ if(this.confirm("Welcome to SWIP Warehouse Management System.\nAre you an employ
         return result;
     }
 
-    private void printCategoryItems(int choice, Map<Integer, String> x){
-        String category = x.get(choice);
+    private void printCategoryItems(int choice, Map<Integer, String> menu){
+        String category = menu.get(choice);
         System.out.printf("\nList of %ss available:%n", category);
         for (Item item: getItemsByCategory(category)){
             System.out.printf("%s %s, Warehouse %d%n", item.getState(), category, item.getWarehouse());
