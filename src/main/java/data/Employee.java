@@ -31,6 +31,15 @@ public class Employee extends User{
         this.password = password;
     }
 
+    //Private Methods:
+    private String checkPluralOrder(String itemName){
+        if(checkPluralName(itemName)){
+            return "";
+        }else{
+            return "s";
+        }
+    }
+
     //Public Methods:
     @Override
     public boolean authenticate(String password){
@@ -40,14 +49,6 @@ public class Employee extends User{
     public void order(String name, int amount){
         System.out.printf("Ordered %d %s%s", amount, name,(amount == 1 ? "" : checkPluralOrder(name.toLowerCase())));
 
-    }
-
-    private String checkPluralOrder(String itemName){
-        if(checkPluralName(itemName)){
-            return "";
-        }else{
-            return "s";
-        }
     }
 
     public boolean checkPluralName(String itemName) {
