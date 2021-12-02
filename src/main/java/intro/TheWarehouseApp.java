@@ -1,5 +1,11 @@
 package main.java.intro;
 
+import main.java.data.Item;
+import main.java.data.Warehouse;
+import main.java.data.WarehouseRepository;
+
+import java.util.Date;
+
 public class TheWarehouseApp {
     /**
      * Execute the <i>TheWarehouseApp</i>
@@ -7,6 +13,8 @@ public class TheWarehouseApp {
      * @param args
      */
     public static void main(String[] args) {
+
+
         TheWarehouseManager theManager = new TheWarehouseManager();
 
         // Welcome User
@@ -23,5 +31,7 @@ public class TheWarehouseApp {
             }
 
         } while (true);
+
+
     }
 }

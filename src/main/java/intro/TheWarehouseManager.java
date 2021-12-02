@@ -1,27 +1,28 @@
 package main.java.intro;
 
 
-import main.java.data.Item;
-import main.java.data.Person;
-import main.java.data.StockRepository;
+import main.java.data.*;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static main.java.data.PersonnelRepository.isUserValid;
+import static main.java.data.UserRepository.isUserValid;
 
 /**
  * Provides necessary methods to deal through the Warehouse management actions
  *
  * @author riteshp
  */
-public class TheWarehouseManager extends StockRepository {
+public class TheWarehouseManager extends WarehouseRepository {
     // =====================================================================================
     // Member Variables
     // =====================================================================================
-    private static final Person currentUser = new Person();
 
-    private static final List<String> SESSION_ACTIONS = new ArrayList<>();
+    private Employee currentUser = null;
+
+    //private static User currentUser = null;
+
+    private static final List<String> SESSION_ACTIONS = new LinkedList<>();
     // To read inputs from the console/CLI
     private final Scanner reader = new Scanner(System.in);
     private final String[] userOptions = {
@@ -40,15 +41,15 @@ public class TheWarehouseManager extends StockRepository {
      */
     public void welcomeUser() {
         this.statusCheck();
-        this.greetUser();
-        this.authorizations();
+        currentUser.greet();
     }
-public void statusCheck() {
-if(this.confirm("Welcome to SWIP Warehouse Management System.\nAre you an employee? ")){
-    this.seekUserName();
-    this.seekPassword();
+
+private void statusCheck() {
+if(this.confirm("Do you want to login as an employee? ")){
+    currentUser = new Employee(this.seekUserName(), this.seekPassword());
 }else{
-    currentUser.setUserName("Guest");
+    User user = new Employee();
+    currentUser = (Employee) user;
 }
     }
 
@@ -58,8 +59,7 @@ if(this.confirm("Welcome to SWIP Warehouse Management System.\nAre you an employ
      */
     public int getUsersChoice() {
         int choice = 0;
-
-            System.out.println("What would you like to do? ");
+        System.out.println();
             for (String option : this.userOptions) {
                 System.out.println(option);
             }
@@ -125,25 +125,17 @@ if(this.confirm("Welcome to SWIP Warehouse Management System.\nAre you an employ
         return choice.startsWith("y");
     }
 
-    private static void listSessionActions() {
-        int i = 0;
-        if(SESSION_ACTIONS.size() < 1){
-            System.out.println("In this session you have not done anything.");
-        }else {
-            System.out.println("In this session you have:");
-            for (String action : SESSION_ACTIONS) {
-                i++;
-                System.out.println("        "+i +". "+action);
-            }
-        }
-    }
+
 
     /**
      * End the application
      */
     public void quit() {
-        System.out.printf("\nThank you for your visit, %s!\n", currentUser.getUserName());
-        listSessionActions();
+        if(UserRepository.isUserEmployee(currentUser.getName())){
+            currentUser.bye(SESSION_ACTIONS);
+        }else {
+            currentUser.bye();
+        }
         System.exit(0);
     }
 
@@ -152,63 +144,47 @@ if(this.confirm("Welcome to SWIP Warehouse Management System.\nAre you an employ
     // =====================================================================================
 
     private boolean verifyUser(){
-        return isUserValid(currentUser.getUserName(), currentUser.getPassword());
+        if(isUserValid(currentUser.getName(), (currentUser.getPassword()))){
+            currentUser.setAuthenticated(true);
+            return true;
+        }else{
+            currentUser.setAuthenticated(false);
+        }
+        return false;
     }
 
-    private void authorizations() {
-        if(this.verifyUser()){
-            System.out.println("You are authorized to place an order.");
-        }else if(currentUser.getUserName().equals("Guest")){
-            System.out.println("You are not authorized to place an order but you can still use the rest of the operations.");
-        }else{
-            System.out.println("Credentials not recognized. You are not authorized to place an order but you can still use the rest of the operations.");
-        }
-    }
+
     /**
      * Get user's name via CLI
      */
-    private void seekUserName() {
+    private String seekUserName() {
         System.out.print("What is your user name? ");
-        currentUser.setUserName(this.reader.nextLine());
+        return this.reader.nextLine();
     }
 
-    private void seekPassword() {
+    private String seekPassword() {
         System.out.print("Please enter your password: ");
-        currentUser.setPassword(reader.nextLine());
+        return this.reader.nextLine();
     }
 
-    /**
-     * Print a welcome message with the given user's name
-     */
-    private void greetUser() {
-        System.out.printf("\nHello, %s!\n", currentUser.getUserName());
-    }
 
     private void printNumberOfItemsByWarehouse() {
         System.out.println();
         for (int warehouse : getWarehouses()) {
-            System.out.printf("Total items in warehouse %d: %d\n", warehouse, StockRepository.getItemsByWarehouse(warehouse).size());
+            System.out.printf("Total items in warehouse %d: %d\n", warehouse, WarehouseRepository.getItemsByWarehouse(warehouse).size());
         }
     }
 
     private void listItemsByWarehouse() {
-        Set<Integer> warehouseNumbers = getWarehouses();
-        for (int warehouse : warehouseNumbers) {
-            System.out.printf("\nItems in warehouse %d:%n",warehouse);
-            this.listItems(StockRepository.getItemsByWarehouse(warehouse));
-
+        for (Warehouse warehouse : WarehouseRepository.WAREHOUSE_LIST) {
+            System.out.println(warehouse.toString());
+            System.out.println("====================================\n====================================\n");
         }
         printNumberOfItemsByWarehouse();
-        SESSION_ACTIONS.add("Listed "+getTotalListedItems(StockRepository.getAllItems())+" items.");
+        SESSION_ACTIONS.add("Listed "+getTotalListedItems(WarehouseRepository.getAllItems())+" items.");
 
     }
 
-
-    private void listItems(List<Item> warehouse) {
-        for (Item item : warehouse) {
-            System.out.printf("- %s\n", item.toString());
-        }
-    }
 
     private int getTotalListedItems(List<Item> masterList){
         return masterList.size();
@@ -223,7 +199,6 @@ if(this.confirm("Welcome to SWIP Warehouse Management System.\nAre you an employ
             printMaximumAvailability(itemName.toLowerCase());
             SESSION_ACTIONS.add("Searched "+getAppropriateIndefiniteArticle(formattedItem(itemName))+ formattedItem(itemName)+".");
             askAmountAndConfirmOrder(getAvailableAmount(itemName.toLowerCase()), itemName);
-
         }
 
     }

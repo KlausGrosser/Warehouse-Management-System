@@ -16,21 +16,21 @@ import java.util.Set;
 /**
  * The Data Repository
  *
- * @author riteshp
+ * @author pujanov
  *
  */
-public class PersonnelRepository {
+public class UserRepository {
 
-    private static List<Person> PERSON_LIST = new ArrayList<Person>();
+    private static List<Employee> EMPLOYEE_LIST = new ArrayList<Employee>();
 
     /**
-     * Load item records from the stock.json file
+     * Load employee, records from the personnel.json file
      */
     static {
         // System.out.println("Loading items");
         BufferedReader reader = null;
         try {
-            PERSON_LIST.clear();
+            EMPLOYEE_LIST.clear();
 
             reader = new BufferedReader(new FileReader("src/main/java/resources/personnel.json"));
             Object data = JSONValue.parse(reader);
@@ -39,11 +39,10 @@ public class PersonnelRepository {
                 for (Object obj : dataArray) {
                     if (obj instanceof JSONObject) {
                         JSONObject jsonData = (JSONObject) obj;
-                        Person person = new Person();
-                        person.setUserName(jsonData.get("user_name").toString());
-                        person.setPassword(jsonData.get("password").toString());
-                        //person.setHeadOf((Person) jsonData.getOrDefault("head_of", null));
-                        PERSON_LIST.add(person);
+                        String userName = jsonData.get("user_name").toString();
+                        String password = jsonData.get("password").toString();
+                        Employee employee = new Employee(userName, password, null);
+                        EMPLOYEE_LIST.add(employee);
                     }
                 }
             }
@@ -64,26 +63,29 @@ public class PersonnelRepository {
      *
      * @return
      */
-    public static List<Person> getAllPersons() {
-        return PERSON_LIST;
+    public static List<Employee> getAllEmployees() {
+        return EMPLOYEE_LIST;
     }
 
 
     public static boolean isUserValid(String userName, String password) {
-        //to implement
-        boolean check;
-        int i = 0;
-        Person person = new Person();
-        person.setUserName(userName);
-        person.setPassword(password);
+        List<Employee> employees = getAllEmployees();
 
-        for(Person demo: PERSON_LIST){
-            if(person.getUserName().equals(demo.getUserName())&&person.getPassword().equals(demo.getPassword())){
-                i++;
+        for(Employee employee : employees) {
+            if(userName.equals(employee.getName())) {
+                if(password.equals(employee.getPassword())) {
+                    return true;
+                }
             }
         }
+        return false;
+    }
 
-        check = i > 0;
+    public static boolean isUserEmployee(String name) {
+        boolean check = false;
+        for(Employee employee : getAllEmployees()) {
+            if(employee.getName().equals(name))check = true;
+        }
         return check;
     }
 
