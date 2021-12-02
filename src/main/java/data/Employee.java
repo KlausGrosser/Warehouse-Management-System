@@ -38,8 +38,20 @@ public class Employee extends User{
     }
 
     public void order(String name, int amount){
-        System.out.printf("Ordered %d %s", amount, name);
+        System.out.printf("Ordered %d %s%s", amount, name,(amount == 1 ? "" : checkPluralOrder(name.toLowerCase())));
 
+    }
+
+    private String checkPluralOrder(String itemName){
+        if(checkPluralName(itemName)){
+            return "";
+        }else{
+            return "s";
+        }
+    }
+
+    public boolean checkPluralName(String itemName) {
+        return itemName.endsWith("s");
     }
 
     @Override
@@ -57,7 +69,7 @@ public class Employee extends User{
     public void bye(List actions) {
         super.bye();
         for(int i = 0; i < actions.size(); i++){
-            System.out.printf("%d) %s", i+1, actions.get(i));
+            System.out.printf("%d) %s\n", i+1, actions.get(i));
         }
     }
 

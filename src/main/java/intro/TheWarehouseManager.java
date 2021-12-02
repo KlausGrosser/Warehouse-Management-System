@@ -318,11 +318,12 @@ if(this.confirm("Do you want to login as an employee? ")){
                 if(orderAmount == 0){
                     return;
                 }else{
-                    System.out.printf("%d %s%s been ordered\n", orderAmount, formattedItem(item), (orderAmount == 1 ? " has" : checkPluralOrder(item.toLowerCase())));
+                    currentUser.order(formattedItem(item),orderAmount);
+                    //System.out.printf("%d %s%s been ordered\n", orderAmount, formattedItem(item), (orderAmount == 1 ? " has" : checkPluralOrder(item.toLowerCase())));
                     if(orderAmount == 1){
                         SESSION_ACTIONS.add("Ordered "+orderAmount+" "+formattedItem(item)+".");
                     }else {
-                        if (checkPluralName(item.toLowerCase())) {
+                        if (currentUser.checkPluralName(item.toLowerCase())) {
                             SESSION_ACTIONS.add("Ordered " + orderAmount + " " + formattedItem(item) + ".");
                         } else {
                             SESSION_ACTIONS.add("Ordered " + orderAmount + " " + formattedItem(item) + "s.");
@@ -335,18 +336,6 @@ if(this.confirm("Do you want to login as an employee? ")){
 
     private String formattedItem(String itemName) {
         return itemName.toUpperCase().charAt(0) + itemName.substring(1).toLowerCase();
-    }
-
-    private boolean checkPluralName(String itemName) {
-        return itemName.endsWith("s");
-    }
-
-    private String checkPluralOrder(String itemName){
-        if(checkPluralName(itemName)){
-            return " have";
-        }else{
-            return "s have";
-        }
     }
 
 
