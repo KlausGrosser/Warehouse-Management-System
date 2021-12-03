@@ -2,7 +2,7 @@ package main.java.data;
 
 import java.util.List;
 
-public class User {
+public abstract class User {
 
     //Fields:
     protected String name = "Anonymous";
@@ -13,7 +13,9 @@ public class User {
     public User(String userName){
         this.name = userName;
     }
-    //Getters:
+
+    //Getters and Setters:
+
     public String getName() {
         return this.name = name;
     }
@@ -30,6 +32,7 @@ public class User {
         this.isAuthenticated = authenticated;
     }
 
+
     //public methods:
     public boolean authenticate(String password) {
         return false;
@@ -38,6 +41,11 @@ public class User {
     public boolean isNamed(String name) {
         return (name.equals(this.name));
     }
+    
+
+
+    public abstract void order(String item, int orderAmount);
+
 
     public void greet(){
         System.out.printf("Hello, %s!\n" +
@@ -46,8 +54,17 @@ public class User {
                 "please ask one of our staff members to assist you.",this.name);
     }
 
-    public void bye(){
+    public void bye() {
         System.out.printf("\nThank you for your visit %s!\n", this.name);
-
     }
+
+    public boolean checkAuthenticated(){
+        return this.isAuthenticated;
+    }
+
+
+    public abstract String getPassword();
+
+    public abstract void setPassword(String password);
+
 }

@@ -1,5 +1,8 @@
 package main.java.data;
 
+import main.java.intro.TheWarehouseApp;
+import main.java.intro.TheWarehouseManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,22 +10,24 @@ public class Employee extends User{
 
     //Fields:
     private String password;
+    private String role;
     private ArrayList<Employee> headOf;
 
     //Constructors:
     public Employee() {}
 
     public Employee(String userName,String password){
-        super.name = userName;
+        this.name = userName;
         this.password = password;
     }
-    public Employee(String userName, String password, ArrayList<Employee> headOf){
+    public Employee(String userName, String password, String role, ArrayList<Employee> headOf){
         super.name = userName;
         this.password = password;
         this.headOf = headOf;
+        this.role = role;
     }
 
-    //Getters:
+    //Getters and Setters:
     public String getPassword(){
         return this.password;
     }
@@ -31,14 +36,12 @@ public class Employee extends User{
         this.password = password;
     }
 
-    //Private Methods:
-    private String checkPluralOrder(String itemName){
-        if(checkPluralName(itemName)){
-            return "";
-        }else{
-            return "s";
-        }
+    public String getRole(){
+        return this.role;
     }
+
+    //Private Methods:
+
 
     //Public Methods:
     @Override
@@ -47,31 +50,29 @@ public class Employee extends User{
     }
 
     public void order(String name, int amount){
-        System.out.printf("Ordered %d %s%s", amount, name,(amount == 1 ? "" : checkPluralOrder(name.toLowerCase())));
+        System.out.printf("\nOrdered %d %s%s", amount, name,(amount == 1 ? "" : TheWarehouseManager.checkPluralOrder(name.toLowerCase())));
 
-    }
-
-    public boolean checkPluralName(String itemName) {
-        return itemName.endsWith("s");
     }
 
     @Override
     public void greet(){
-        if(this.getName().equals("Anonymous")){
-            super.greet();
-        }else{
             System.out.printf("Hello, %s!\n" +
                     "If you experience a problem with the system,\n" +
-                    "please contact technical support.", name);
-        }
-
+                    "please contact technical support.\n", this.name);
     }
 
-    public void bye(List actions) {
-        super.bye();
-        for(int i = 0; i < actions.size(); i++){
-            System.out.printf("%d) %s\n", i+1, actions.get(i));
+
+    @Override
+    public void bye() {
+        System.out.printf("\nThank you for your visit, %s!\n", this.name);
+        for(int i = 0; i < TheWarehouseManager.SESSION_ACTIONS.size(); i++){
+            System.out.printf("%d) %s\n", i+1, TheWarehouseManager.SESSION_ACTIONS.get(i));
         }
+    }
+
+
+    public boolean isAuthenticated() {
+        return false;
     }
 
 }

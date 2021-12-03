@@ -18,13 +18,11 @@ public class TheWarehouseManager extends WarehouseRepository {
     // Member Variables
     // =====================================================================================
 
-    private Employee currentUser = null;
 
-    //private static User currentUser = null;
 
-    private static final List<String> SESSION_ACTIONS = new LinkedList<>();
+    public static final List<String> SESSION_ACTIONS = new LinkedList<>();
     // To read inputs from the console/CLI
-    private final Scanner reader = new Scanner(System.in);
+    public static Scanner reader = new Scanner(System.in);
     private final String[] userOptions = {
             "1. List items by warehouse", "2. Search an item and place an order", "3. Browse items by category", "4. Quit"
     };
@@ -40,16 +38,20 @@ public class TheWarehouseManager extends WarehouseRepository {
      * Welcome User
      */
     public void welcomeUser() {
-        this.statusCheck();
-        currentUser.greet();
+        //this.statusCheck();
+
+        this.seekUserName();
+        TheWarehouseApp.SESSION_USER.greet();
     }
 
+
+
 private void statusCheck() {
-if(this.confirm("Do you want to login as an employee? ")){
-    currentUser = new Employee(this.seekUserName(), this.seekPassword());
+if(this.confirm("Do you have an account? ")){
+    this.seekUserName();
+    this.seekPassword();
 }else{
-    User user = new Employee();
-    currentUser = (Employee) user;
+    TheWarehouseApp.SESSION_USER = new Guest();
 }
     }
 
@@ -74,7 +76,7 @@ if(this.confirm("Do you want to login as an employee? ")){
                             "**************************************************");
                     System.out.print("Type the number of the operation: ");
                 }
-                choice = Integer.parseInt(this.reader.nextLine());
+                choice = Integer.parseInt(reader.nextLine());
 
                 if (choice < 1 || choice > this.userOptions.length) {
                     System.out.printf("Error! Please choose a number between 1 and %d: ", this.userOptions.length);
@@ -116,7 +118,7 @@ if(this.confirm("Do you want to login as an employee? ")){
         String choice;
         do {
             System.out.printf("%s (y/n) ", message);
-            choice = this.reader.nextLine();
+            choice = reader.nextLine();
             if (choice.length() > 0) {
                 choice = choice.trim();
             }
@@ -131,11 +133,8 @@ if(this.confirm("Do you want to login as an employee? ")){
      * End the application
      */
     public void quit() {
-        if(UserRepository.isUserEmployee(currentUser.getName())){
-            currentUser.bye(SESSION_ACTIONS);
-        }else {
-            currentUser.bye();
-        }
+        TheWarehouseApp.SESSION_USER.bye();
+
         System.exit(0);
     }
 
@@ -143,28 +142,33 @@ if(this.confirm("Do you want to login as an employee? ")){
     // Private Methods
     // =====================================================================================
 
-    private boolean verifyUser(){
-        if(isUserValid(currentUser.getName(), (currentUser.getPassword()))){
-            currentUser.setAuthenticated(true);
-            return true;
-        }else{
-            currentUser.setAuthenticated(false);
-        }
-        return false;
-    }
-
 
     /**
      * Get user's name via CLI
      */
     private String seekUserName() {
-        System.out.print("What is your user name? ");
-        return this.reader.nextLine();
+        System.out.print("Enter your username: ");
+        String userName = reader.nextLine();
+        if(UserRepository.isUserEmployee(userName)) {
+            TheWarehouseApp.SESSION_USER = new Employee();
+            TheWarehouseApp.SESSION_USER.setName(userName);
+        }else if(UserRepository.isUserAdmin(userName)){
+            TheWarehouseApp.SESSION_USER = new Admin();
+            TheWarehouseApp.SESSION_USER.setName(userName);
+        }else if (!userName.isEmpty()&&(!UserRepository.isUserEmployee(TheWarehouseApp.SESSION_USER.getName()))){
+            TheWarehouseApp.SESSION_USER = new Guest();
+            TheWarehouseApp.SESSION_USER.setName(userName);
+        }else{
+            TheWarehouseApp.SESSION_USER = new Guest();
+        }
+        return userName;
     }
 
-    private String seekPassword() {
+    String seekPassword() {
         System.out.print("Please enter your password: ");
-        return this.reader.nextLine();
+        String password = reader.nextLine();
+        TheWarehouseApp.SESSION_USER.setPassword(password);
+        return password;
     }
 
 
@@ -311,26 +315,41 @@ if(this.confirm("Do you want to login as an employee? ")){
      * Ask order amount and confirm order
      */
     private void askAmountAndConfirmOrder(int availableAmount, String item) {
-        if(this.verifyUser()){
+        if(TheWarehouseApp.SESSION_USER.checkAuthenticated()) {
+            System.out.println("\nYou are authorized to place orders.");
         boolean toOrder = this.confirm("\nWould you like to order this item? ");
         if (toOrder) {
                 int orderAmount = this.getOrderAmount(availableAmount);
                 if(orderAmount == 0){
                     return;
                 }else{
-                    currentUser.order(formattedItem(item),orderAmount);
-                    //System.out.printf("%d %s%s been ordered\n", orderAmount, formattedItem(item), (orderAmount == 1 ? " has" : checkPluralOrder(item.toLowerCase())));
+                    TheWarehouseApp.SESSION_USER.order(formattedItem(item),orderAmount);
                     if(orderAmount == 1){
                         SESSION_ACTIONS.add("Ordered "+orderAmount+" "+formattedItem(item)+".");
                     }else {
-                        if (currentUser.checkPluralName(item.toLowerCase())) {
-                            SESSION_ACTIONS.add("Ordered " + orderAmount + " " + formattedItem(item) + ".");
+                        if (checkPluralName(item.toLowerCase())) {
+                            SESSION_ACTIONS.add("Ordered " + orderAmount + " " + formattedItem(item) + this.checkPluralOrder(item)+".");
                         } else {
-                            SESSION_ACTIONS.add("Ordered " + orderAmount + " " + formattedItem(item) + "s.");
+                            SESSION_ACTIONS.add("Ordered " + orderAmount + " " + formattedItem(item) + this.checkPluralOrder(item)+".");
                         }
                     }
                 }
             }
+        }
+        else{
+            System.out.println("\nYou are not authorized to place orders.");
+        }
+    }
+
+    public static boolean checkPluralName(String itemName) {
+        return itemName.endsWith("s");
+    }
+
+    public static String checkPluralOrder(String itemName){
+        if(checkPluralName(itemName)){
+            return "";
+        }else{
+            return "s";
         }
     }
 
@@ -348,7 +367,7 @@ if(this.confirm("Do you want to login as an employee? ")){
                 reader.nextLine();
                 System.out.print("Please enter a number: ");
             }
-            orderAmount = Integer.parseInt(this.reader.nextLine());
+            orderAmount = Integer.parseInt(reader.nextLine());
 
             if (orderAmount > availableAmount) {
                 System.out.println("**************************************************\n" +
@@ -422,7 +441,7 @@ if(this.confirm("Do you want to login as an employee? ")){
                         "**************************************************");
                 System.out.print("Type the number of the category to browse: ");
             }
-            result = Integer.parseInt(this.reader.nextLine());
+            result = Integer.parseInt(reader.nextLine());
             if(result < 1 || result > getCategories().size()){
                 System.out.println("Please enter a number between 1 and "+getCategories().size()+"!");
             }

@@ -23,6 +23,8 @@ public class UserRepository {
 
     private static List<Employee> EMPLOYEE_LIST = new ArrayList<Employee>();
 
+    private static List<Employee> ADMIN_LIST = new ArrayList<Employee>();
+
     /**
      * Load employee, records from the personnel.json file
      */
@@ -41,8 +43,13 @@ public class UserRepository {
                         JSONObject jsonData = (JSONObject) obj;
                         String userName = jsonData.get("user_name").toString();
                         String password = jsonData.get("password").toString();
-                        Employee employee = new Employee(userName, password, null);
-                        EMPLOYEE_LIST.add(employee);
+                        String role = jsonData.get("role").toString();
+                        Employee employee = new Employee(userName, password, role,null);
+                        if(employee.getRole().equals("ADMIN")){
+                            ADMIN_LIST.add(employee);
+                        }else {
+                            EMPLOYEE_LIST.add(employee);
+                        }
                     }
                 }
             }
@@ -67,12 +74,13 @@ public class UserRepository {
         return EMPLOYEE_LIST;
     }
 
+    public static List<Employee> getAllAdmins() {
+        return ADMIN_LIST;
+    }
 
     public static boolean isUserValid(String userName, String password) {
-        List<Employee> employees = getAllEmployees();
-
-        for(Employee employee : employees) {
-            if(userName.equals(employee.getName())) {
+        for(Employee employee : getAllEmployees()) {
+            if(isUserEmployee(userName)) {
                 if(password.equals(employee.getPassword())) {
                     return true;
                 }
@@ -82,11 +90,28 @@ public class UserRepository {
     }
 
     public static boolean isUserEmployee(String name) {
-        boolean check = false;
         for(Employee employee : getAllEmployees()) {
-            if(employee.getName().equals(name))check = true;
+            if(employee.getName().equals(name))return true;
         }
-        return check;
+        return false;
+    }
+
+    public static boolean isUserAdmin(String name) {
+        for(Employee employee : getAllAdmins()) {
+            if(employee.getName().equals(name))return true;
+        }
+        return false;
+    }
+
+    public static boolean isAdminValid(String userName, String password) {
+        for(Employee employee : getAllAdmins()) {
+            if(isUserAdmin(userName)) {
+                if(password.equals(employee.getPassword())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }
