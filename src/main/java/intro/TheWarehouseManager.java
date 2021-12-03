@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static main.java.data.UserRepository.isUserValid;
+import static main.java.intro.TheWarehouseApp.SESSION_ACTIONS;
 
 /**
  * Provides necessary methods to deal through the Warehouse management actions
@@ -20,7 +21,6 @@ public class TheWarehouseManager extends WarehouseRepository {
 
 
 
-    public static final List<String> SESSION_ACTIONS = new LinkedList<>();
     // To read inputs from the console/CLI
     public static Scanner reader = new Scanner(System.in);
     private final String[] userOptions = {

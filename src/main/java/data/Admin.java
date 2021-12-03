@@ -4,6 +4,8 @@ import main.java.intro.TheWarehouseManager;
 
 import java.util.ArrayList;
 
+import static main.java.intro.TheWarehouseApp.SESSION_ACTIONS;
+
 public class Admin extends User{
 
     //Fields:
@@ -53,8 +55,8 @@ public class Admin extends User{
     @Override
     public void bye() {
         System.out.printf("\nThank you for your visit, %s!\n", this.name);
-        for(int i = 0; i < TheWarehouseManager.SESSION_ACTIONS.size(); i++){
-            System.out.printf("%d) %s\n", i+1, TheWarehouseManager.SESSION_ACTIONS.get(i));
+        for(int i = 0; i < SESSION_ACTIONS.size(); i++){
+            System.out.printf("%d) %s\n", i+1, SESSION_ACTIONS.get(i));
         }
     }
 }

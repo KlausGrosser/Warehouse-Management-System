@@ -22,12 +22,17 @@ public class TheWarehouseApp {
 
         // Welcome User
         theManager.welcomeUser();
-
+        SESSION_USER.setPassword("");
+        String password = SESSION_USER.getPassword();
         // Get the user's choice of action and perform action
         do {
             if(!UserRepository.isUserAdmin(SESSION_USER.getName())) {
                 if(UserRepository.isUserEmployee(SESSION_USER.getName())){
-                    if(UserRepository.isUserValid(SESSION_USER.getName(),theManager.seekPassword())){
+                    IS_EMPLOYEE = true;
+                    if(SESSION_USER.getPassword().isEmpty()){
+                        password = theManager.seekPassword();
+                    }
+                    if(UserRepository.isUserValid(SESSION_USER.getName(),password)){
                         SESSION_USER.setAuthenticated(true);
                     }
 

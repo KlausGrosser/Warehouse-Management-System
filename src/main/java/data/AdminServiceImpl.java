@@ -7,6 +7,8 @@ import java.util.Scanner;
 import main.java.intro.TheWarehouseApp;
 import main.java.intro.TheWarehouseManager;
 
+import static main.java.intro.TheWarehouseApp.SESSION_ACTIONS;
+
 public class AdminServiceImpl implements AdminService{
 
     // To read inputs from the console/CLI
@@ -114,7 +116,7 @@ public class AdminServiceImpl implements AdminService{
         this.printsListOfOrdersToConsole(ordersByWarehouse);
 
         //Add the action detail string to the SESSION_ACTIONS in TheWarehouseApp. Eg: 'Listed Orders of warehouse ' + {warehouseId}
-        TheWarehouseManager.SESSION_ACTIONS.add("Listed Orders of warehouse "+id+".");
+        SESSION_ACTIONS.add("Listed Orders of warehouse "+id+".");
     }
 
     @Override
@@ -174,7 +176,7 @@ public class AdminServiceImpl implements AdminService{
         this.printsListOfOrdersToConsole(orders);
 
         //Add the action detail string to the SESSION_ACTIONS in TheWarehouseApp. Eg: 'Listed Orders with status ' + {status}
-        TheWarehouseManager.SESSION_ACTIONS.add("Listed Orders with status: "+status+".");
+        SESSION_ACTIONS.add("Listed Orders with status: "+status+".");
     }
 
     @Override
@@ -204,7 +206,7 @@ public class AdminServiceImpl implements AdminService{
         this.printsListOfOrdersToConsole(orders);
 
         //Add the action detail string to the SESSION_ACTIONS in TheWarehouseApp. Eg: 'Listed Orders with total cost greater than ' + {marginalValue}
-        TheWarehouseManager.SESSION_ACTIONS.add("Listed Orders of "+value+" euros and more.");
+        SESSION_ACTIONS.add("Listed Orders of "+value+" euros and more.");
     }
 
 
