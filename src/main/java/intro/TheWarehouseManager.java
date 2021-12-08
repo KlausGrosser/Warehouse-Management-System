@@ -1,13 +1,13 @@
-package main.java.intro;
+package intro;
 
 
-import main.java.data.*;
+import data.*;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static main.java.data.UserRepository.isUserValid;
-import static main.java.intro.TheWarehouseApp.SESSION_ACTIONS;
+import static data.UserRepository.isUserValid;
+import static intro.TheWarehouseApp.SESSION_ACTIONS;
 
 /**
  * Provides necessary methods to deal through the Warehouse management actions

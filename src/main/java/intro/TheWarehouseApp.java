@@ -1,9 +1,9 @@
-package main.java.intro;
+package intro;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.data.*;
+import data.*;
 
 public class TheWarehouseApp {
     /**
@@ -12,7 +12,7 @@ public class TheWarehouseApp {
      * @param args
      */
 
-    public static List<String> SESSION_ACTIONS = new ArrayList<String>();
+    public static List<String> SESSION_ACTIONS = new ArrayList<>();
     public static boolean IS_EMPLOYEE = false;
     public static User SESSION_USER = new Guest();
 

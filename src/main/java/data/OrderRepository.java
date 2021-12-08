@@ -1,4 +1,4 @@
-package main.java.data;
+package data;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class OrderRepository {
 
-    private static List<Order> ORDER_LIST = new ArrayList<Order>();
+    private static final List<Order> ORDER_LIST = new ArrayList<Order>();
 
     /**
      * Load order, records from the order.json file

@@ -1,4 +1,4 @@
-package main.java.data;
+package data;
 
 import java.util.Date;
 
@@ -29,7 +29,7 @@ public class Item {
   public Item(){}
 
   public Item(String state, String category, int warehouse, Date dateOfStock){
-    this.state = state;
+    this.state = state.substring(0,1).toUpperCase()+state.substring(1);
     this.category = category;
     this.warehouse = warehouse;
     this.dateOfStock = dateOfStock;

@@ -1,10 +1,10 @@
-package main.java.data;
+package data;
 
-import main.java.intro.TheWarehouseManager;
+import intro.TheWarehouseManager;
 
 import java.util.ArrayList;
 
-import static main.java.intro.TheWarehouseApp.SESSION_ACTIONS;
+import static intro.TheWarehouseApp.SESSION_ACTIONS;
 
 public class Admin extends User{
 

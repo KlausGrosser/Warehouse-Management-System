@@ -1,4 +1,4 @@
-package main.java.data;
+package data;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -21,9 +21,9 @@ import java.util.Set;
  */
 public class UserRepository {
 
-    private static List<Employee> EMPLOYEE_LIST = new ArrayList<Employee>();
+    private static final List<Employee> EMPLOYEE_LIST = new ArrayList<Employee>();
 
-    private static List<Employee> ADMIN_LIST = new ArrayList<Employee>();
+    private static final List<Employee> ADMIN_LIST = new ArrayList<Employee>();
 
     /**
      * Load employee, records from the personnel.json file

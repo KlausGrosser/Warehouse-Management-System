@@ -1,4 +1,4 @@
-package main.java.data;
+package data;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,12 +10,13 @@ public class Warehouse {
 
     //Fields:
    private int id;
-   private final List<Item> STOCK = new ArrayList<Item>();
+   private List<Item> STOCK;
 
     //Constructors:
     public Warehouse(){}
     public Warehouse(int warehouseId){
         this.id = warehouseId;
+        this.STOCK = new ArrayList<Item>();
     }
 
     //Getters:

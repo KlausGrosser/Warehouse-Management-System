@@ -1,13 +1,13 @@
-package main.java.data;
+package data;
 
-import main.java.intro.TheWarehouseApp;
-import main.java.intro.TheWarehouseManager;
+import intro.TheWarehouseApp;
+import intro.TheWarehouseManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static main.java.intro.TheWarehouseApp.IS_EMPLOYEE;
-import static main.java.intro.TheWarehouseApp.SESSION_ACTIONS;
+import static intro.TheWarehouseApp.IS_EMPLOYEE;
+import static intro.TheWarehouseApp.SESSION_ACTIONS;
 
 public class Employee extends User{
 
