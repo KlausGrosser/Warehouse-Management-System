@@ -4,10 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -169,6 +166,7 @@ public class WarehouseRepository {
      */
 
     public static List<Item> getItemsByCategory(String category) {
+
         return getItemsByCategory(category, getAllItems());
     }
 
@@ -179,13 +177,23 @@ public class WarehouseRepository {
      * @param category
      * @return
      */
-    public static List<Item> getItemsByCategory(String category, List<Item> masterList) {
-        List<Item> items = new ArrayList<Item>();
+    public static  List<Item> getItemsByCategory(String category, List<Item> masterList) {
+        List<Item> items = new ArrayList<>();
+
         for (Item item : masterList) {
             if (item.getCategory().equalsIgnoreCase(category)) {
                 items.add(item);
             }
         }
+        items.sort(new Comparator<Item>() {
+            @Override
+            public int compare(Item item1, Item item2) {
+                return item1.compareTo(item2);
+            }
+        });
+
         return items;
     }
+
+
 }

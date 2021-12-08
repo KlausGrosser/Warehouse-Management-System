@@ -62,27 +62,27 @@ if(this.confirm("Do you have an account? ")){
     public int getUsersChoice() {
         int choice = 0;
         System.out.println();
-            for (String option : this.userOptions) {
-                System.out.println(option);
+        for (String option : this.userOptions) {
+            System.out.println(option);
+        }
+
+        System.out.print("Type the number of the operation: ");
+
+        do {
+            while(!reader.hasNextInt()) { //repeat until a number is entered.
+                String input = reader.nextLine();
+                System.out.println("\n**************************************************\n" +
+                        input + " is not a valid operation. Please enter a number between 1 and " +this.userOptions.length+"!\n" +
+                        "**************************************************");
+                System.out.print("Type the number of the operation: ");
             }
+            choice = Integer.parseInt(reader.nextLine());
 
-            System.out.print("Type the number of the operation: ");
-
-            do {
-                while(!reader.hasNextInt()) { //repeat until a number is entered.
-                   String input = reader.nextLine();
-                    System.out.println("\n**************************************************\n" +
-                            input + " is not a valid operation. Please enter a number between 1 and " +this.userOptions.length+"!\n" +
-                            "**************************************************");
-                    System.out.print("Type the number of the operation: ");
-                }
-                choice = Integer.parseInt(reader.nextLine());
-
-                if (choice < 1 || choice > this.userOptions.length) {
-                    System.out.printf("Error! Please choose a number between 1 and %d: ", this.userOptions.length);
-                }
-            } while (choice < 1 || choice > this.userOptions.length);
-            return choice;
+            if (choice < 1 || choice > this.userOptions.length) {
+                System.out.printf("Error! Please choose a number between 1 and %d: ", this.userOptions.length);
+            }
+        } while (choice < 1 || choice > this.userOptions.length);
+        return choice;
     }
 
     /**
@@ -415,7 +415,8 @@ if(this.confirm("Do you have an account? ")){
     private Map<Integer, String> createCategoryMenu(){
         Map<Integer, String> result = new LinkedHashMap<>();
         int count = 1;
-        for(String category: getCategories()){
+        Set<String> sortedSet = new TreeSet<>(getCategories());
+        for(String category: sortedSet){
             result.put(count, category);
             count++;
         }
@@ -427,7 +428,6 @@ if(this.confirm("Do you have an account? ")){
             System.out.printf("%d. %s (%d)%n", entry.getKey(), entry.getValue(), amountOfItemsPerCategory(entry.getValue()));
         }
     }
-
 
 
     private int chooseCategory(){
@@ -452,6 +452,9 @@ if(this.confirm("Do you have an account? ")){
     private void printCategoryItems(int choice, Map<Integer, String> menu){
         String category = menu.get(choice);
         System.out.printf("\nList of %ss available:%n", category);
+
+        List<String> items = new ArrayList<>();
+
         for (Item item: getItemsByCategory(category)){
             System.out.printf("%s %s, Warehouse %d%n", item.getState(), category, item.getWarehouse());
         }

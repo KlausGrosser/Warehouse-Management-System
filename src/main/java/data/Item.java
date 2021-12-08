@@ -7,7 +7,7 @@ import java.util.Date;
  * @author riteshp
  *
  */
-public class Item {
+public class Item implements Comparable<Item> {
   /**
    * Current state of the item
    */
@@ -69,5 +69,10 @@ public class Item {
   @Override
   public String toString() {
     return String.format("%s %s", this.getState(), this.getCategory().toLowerCase());
+  }
+
+  @Override
+  public int compareTo(Item o) {
+    return state.compareTo(o.getState());
   }
 }
