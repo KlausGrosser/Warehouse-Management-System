@@ -6,7 +6,6 @@ import data.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static data.UserRepository.isUserValid;
 import static intro.TheWarehouseApp.SESSION_ACTIONS;
 
 /**
@@ -44,18 +43,6 @@ public class TheWarehouseManager extends WarehouseRepository {
         TheWarehouseApp.SESSION_USER.greet();
     }
 
-
-
-private void statusCheck() {
-if(this.confirm("Do you have an account? ")){
-    this.seekUserName();
-    this.seekPassword();
-}else{
-    TheWarehouseApp.SESSION_USER = new Guest();
-}
-    }
-
-
     /**
      * Ask for user's choice of action
      */
@@ -65,24 +52,27 @@ if(this.confirm("Do you have an account? ")){
         for (String option : this.userOptions) {
             System.out.println(option);
         }
+        return this.promptIntChoice("Type the number of the operation: ", choice, this.userOptions.length);
+    }
 
-        System.out.print("Type the number of the operation: ");
-
-        do {
-            while(!reader.hasNextInt()) { //repeat until a number is entered.
-                String input = reader.nextLine();
+    /**
+    Prints an error message if the entered option is not valid.
+     */
+    private void printErrorMessage(int choice, String input, int numOfOptions){
+        if (choice < 1 || choice > this.userOptions.length || !input.matches("[0-9]+[\\.]?[0-9]*")) {
+            if(input.isBlank()){
                 System.out.println("\n**************************************************\n" +
-                        input + " is not a valid operation. Please enter a number between 1 and " +this.userOptions.length+"!\n" +
+                        "No option selected. Please enter a number between 1 and " + numOfOptions +"!\n" +
+                        "**************************************************");
+                System.out.print("Type the number of the operation: ");
+            }else {
+                System.out.println("\n**************************************************\n" +
+                        "\"" + input + "\" is not a valid operation. Please enter a number between 1 and " + numOfOptions + "!\n" +
                         "**************************************************");
                 System.out.print("Type the number of the operation: ");
             }
-            choice = Integer.parseInt(reader.nextLine());
+        }
 
-            if (choice < 1 || choice > this.userOptions.length) {
-                System.out.printf("Error! Please choose a number between 1 and %d: ", this.userOptions.length);
-            }
-        } while (choice < 1 || choice > this.userOptions.length);
-        return choice;
     }
 
     /**
@@ -108,21 +98,18 @@ if(this.confirm("Do you have an account? ")){
         }
     }
 
-
     /**
      * Confirm an action
-     *
      * @return action
      */
     public boolean confirm(String message) {
         String choice;
         do {
-            System.out.printf("%s (y/n) ", message);
+            System.out.printf("%s (y/n): ", message);
             choice = reader.nextLine();
             if (choice.length() > 0) {
-                choice = choice.trim();
+                choice = choice.trim().toLowerCase();
             }
-            choice = choice.toLowerCase();
         } while (!choice.startsWith("y") && !choice.startsWith("n"));
         return choice.startsWith("y");
     }
@@ -155,7 +142,7 @@ if(this.confirm("Do you have an account? ")){
         }else if(UserRepository.isUserAdmin(userName)){
             TheWarehouseApp.SESSION_USER = new Admin();
             TheWarehouseApp.SESSION_USER.setName(userName);
-        }else if (!userName.isEmpty()&&(!UserRepository.isUserEmployee(TheWarehouseApp.SESSION_USER.getName()))){
+        }else if (!userName.isBlank()&&(!UserRepository.isUserEmployee(TheWarehouseApp.SESSION_USER.getName()))){
             TheWarehouseApp.SESSION_USER = new Guest();
             TheWarehouseApp.SESSION_USER.setName(userName);
         }else{
@@ -194,17 +181,37 @@ if(this.confirm("Do you have an account? ")){
         return masterList.size();
     }
 
+    private boolean checkItem(String itemName){
+        return this.getAvailableAmount(itemName.toLowerCase()) > 0;
+    }
 
     private void searchItemAndPlaceOrder() {
-        String itemName = askItemToOrder();
-        printAmountAvailable(itemName.toLowerCase());
-        printLocations(itemName.toLowerCase());
-        if (getAvailableAmount(itemName.toLowerCase()) > 0) {
-            printMaximumAvailability(itemName.toLowerCase());
-            SESSION_ACTIONS.add("Searched "+getAppropriateIndefiniteArticle(formattedItem(itemName))+ formattedItem(itemName)+".");
-            askAmountAndConfirmOrder(getAvailableAmount(itemName.toLowerCase()), itemName);
-        }
+        String itemName;
+        boolean found;
+        do{
+            itemName = askItemToOrder();
+            found = this.checkItem(itemName);
+            if(itemName.isBlank()){
+                System.out.println("You didn't entered anything. Please try again.");
+            }else if(!found){
+                if(confirm("\"" + itemName + "\" is not in Stock. Do you want to try again?")){
+                    found = false;
+                }else{
+                    return;
+                }
+            }
+        }while(!found);
 
+
+        if(this.checkItem(itemName)){
+            printAmountAvailable(itemName.toLowerCase());
+            printLocations(itemName.toLowerCase());
+            if (getAvailableAmount(itemName.toLowerCase()) > 0) {
+                printMaximumAvailability(itemName.toLowerCase());
+                SESSION_ACTIONS.add("Searched "+getAppropriateIndefiniteArticle(formattedItem(itemName))+ formattedItem(itemName)+".");
+                askAmountAndConfirmOrder(getAvailableAmount(itemName.toLowerCase()), itemName);
+            }
+        }
     }
 
 
@@ -254,7 +261,7 @@ if(this.confirm("Do you have an account? ")){
      */
     private String askItemToOrder() {
         System.out.print("\nWhat is the name of the item? : ");
-        return reader.nextLine().trim();
+        return  reader.nextLine().trim().replaceAll("\\s+", " ");
     }
 
     /**
@@ -273,7 +280,6 @@ if(this.confirm("Do you have an account? ")){
 
 
     private void printLocations(String item) {
-        if (getAvailableAmount(item) > 0) {
             System.out.println("Location:");
             for (Item items : getItemsByWarehouse(1)) {
                 if ((items.getState() + " " + items.getCategory()).toLowerCase().equals(item)) {
@@ -285,9 +291,6 @@ if(this.confirm("Do you have an account? ")){
                     System.out.println("- Warehouse " + items.getWarehouse() + " (in stock for " + daysSinceStocked(items) + " days.)");
                 }
             }
-        } else {
-            System.out.println("Location: Not in stock");
-        }
     }
 
     private long daysSinceStocked(Item item) {
@@ -354,7 +357,11 @@ if(this.confirm("Do you have an account? ")){
     }
 
     private String formattedItem(String itemName) {
-        return itemName.toUpperCase().charAt(0) + itemName.substring(1).toLowerCase();
+        String item = null;
+        if(!itemName.isBlank()){
+            item = itemName.toUpperCase().charAt(0) + itemName.substring(1).toLowerCase();
+        }
+        return item;
     }
 
 
@@ -431,22 +438,24 @@ if(this.confirm("Do you have an account? ")){
 
 
     private int chooseCategory(){
-        int result = 0;
-        do{
-            System.out.print("Type the number of the category to browse: ");
-            while(!reader.hasNextInt()) {
-                String input = reader.nextLine();
-                System.out.println("\n**************************************************\n" +
-                        input + " is not a valid operation. Please enter a number between 1 and " + getCategories().size()+"!\n" +
-                        "**************************************************");
-                System.out.print("Type the number of the category to browse: ");
+        int choice = 0;
+        return this.promptIntChoice("Type the number of the category to browse: ", choice, getCategories().size());
+    }
+
+    private int promptIntChoice(String prompt, int choice, int numOfOptions){
+        System.out.print(prompt);
+        String input;
+        do {
+            input = reader.nextLine();
+            if(input.isBlank()){
+                reader = new Scanner(System.in);
             }
-            result = Integer.parseInt(reader.nextLine());
-            if(result < 1 || result > getCategories().size()){
-                System.out.println("Please enter a number between 1 and "+getCategories().size()+"!");
+            if(input.matches("[0-9]+[\\.]?[0-9]*")){
+                choice = Integer.parseInt(input);
             }
-        }while(result < 1 || result > getCategories().size());
-        return result;
+            this.printErrorMessage(choice, input, numOfOptions);
+        } while (choice < 1 || choice > numOfOptions || !input.matches("[0-9]+[\\.]?[0-9]*"));
+        return choice;
     }
 
     private void printCategoryItems(int choice, Map<Integer, String> menu){
