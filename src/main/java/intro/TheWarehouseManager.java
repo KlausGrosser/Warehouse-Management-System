@@ -52,7 +52,7 @@ public class TheWarehouseManager extends WarehouseRepository {
         for (String option : this.userOptions) {
             System.out.println(option);
         }
-        return this.promptIntChoice("Type the number of the operation: ", choice, this.userOptions.length);
+        return this.promptIntChoice("Type the number of the operation: ", choice, this.userOptions.length, "Type the number of the operation: ");
     }
 
     /**
@@ -110,18 +110,18 @@ public class TheWarehouseManager extends WarehouseRepository {
     /**
      Prints an error message if the entered option is not a valid number.
      */
-    private void printErrorMessage(int choice, String input, int numOfOptions){
+    private void printErrorMessage(int choice, String input, int numOfOptions, String newPrompt){
         if (choice < 1 || choice > this.userOptions.length || !input.matches("[0-9]+[\\.]?[0-9]*")) {
             if(input.isBlank()){
                 System.out.println("\n**************************************************\n" +
                         "No option selected. Please enter a number between 1 and " + numOfOptions +"!\n" +
                         "**************************************************");
-                System.out.print("Type the number of the operation: ");
+                System.out.print(newPrompt);
             }else {
                 System.out.println("\n**************************************************\n" +
                         "\"" + input + "\" is not a valid operation. Please enter a number between 1 and " + numOfOptions + "!\n" +
                         "**************************************************");
-                System.out.print("Type the number of the operation: ");
+                System.out.print(newPrompt);
             }
         }
     }
@@ -426,10 +426,10 @@ public class TheWarehouseManager extends WarehouseRepository {
 
     private int chooseCategory(){
         int choice = 0;
-        return this.promptIntChoice("Type the number of the category to browse: ", choice, getCategories().size());
+        return this.promptIntChoice("Type the number of the category to browse: ", choice, getCategories().size(), "Type the number of the category to browse: ");
     }
 
-    private int promptIntChoice(String prompt, int choice, int numOfOptions){
+    private int promptIntChoice(String prompt, int choice, int numOfOptions, String newPrompt){
         System.out.print(prompt);
         String input;
         do {
@@ -440,7 +440,7 @@ public class TheWarehouseManager extends WarehouseRepository {
             if(input.matches("[0-9]+[\\.]?[0-9]*")){
                 choice = Integer.parseInt(input);
             }
-            this.printErrorMessage(choice, input, numOfOptions);
+            this.printErrorMessage(choice, input, numOfOptions, newPrompt);
         } while (choice < 1 || choice > numOfOptions || !input.matches("[0-9]+[\\.]?[0-9]*"));
         return choice;
     }
