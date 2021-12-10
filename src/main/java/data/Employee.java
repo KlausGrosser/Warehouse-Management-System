@@ -43,9 +43,6 @@ public class Employee extends User{
         return this.role;
     }
 
-    //Private Methods:
-
-
     //Public Methods:
     @Override
     public boolean authenticate(String password){
@@ -54,7 +51,6 @@ public class Employee extends User{
 
     public void order(String name, int amount){
         System.out.printf("\nOrdered %d %s%s", amount, name,(amount == 1 ? "" : TheWarehouseManager.checkPluralOrder(name.toLowerCase())));
-
     }
 
     @Override
@@ -64,7 +60,6 @@ public class Employee extends User{
                     "please contact technical support.\n", this.name);
     }
 
-
     @Override
     public void bye() {
         System.out.printf("\nThank you for your visit, %s!\n", this.name);
@@ -73,8 +68,6 @@ public class Employee extends User{
                 System.out.printf("%d) %s\n", i+1, SESSION_ACTIONS.get(i));
             }
         }
-
     }
-
 
 }

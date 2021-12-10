@@ -7,10 +7,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Warehouse {
-
     //Fields:
-   private int id;
-   private List<Item> STOCK;
+    private int id;
+    private List<Item> STOCK;
 
     //Constructors:
     public Warehouse(){}

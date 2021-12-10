@@ -6,16 +6,18 @@ import java.util.List;
 import data.*;
 
 public class TheWarehouseApp {
+
+    //Fields:
     /**
      * Execute the <i>TheWarehouseApp</i>
      *
      * @param args
      */
-
     public static List<String> SESSION_ACTIONS = new ArrayList<>();
     public static boolean IS_EMPLOYEE = false;
     public static User SESSION_USER = new Guest();
 
+    //Main method:
     public static void main(String[] args) {
 
         TheWarehouseManager theManager = new TheWarehouseManager();

@@ -33,7 +33,7 @@ public abstract class User {
     }
 
 
-    //public methods:
+    //Public methods:
     public boolean authenticate(String password) {
         return false;
     }
@@ -41,11 +41,8 @@ public abstract class User {
     public boolean isNamed(String name) {
         return (name.equals(this.name));
     }
-    
-
 
     public abstract void order(String item, int orderAmount);
-
 
     public void greet(){
         System.out.printf("Hello, %s!\n" +
@@ -61,7 +58,6 @@ public abstract class User {
     public boolean checkAuthenticated(){
         return this.isAuthenticated;
     }
-
 
     public abstract String getPassword();
 

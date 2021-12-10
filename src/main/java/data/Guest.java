@@ -2,10 +2,13 @@ package data;
 
 public class Guest extends User{
 
+    //Constructor:
     public Guest() {
         super();
     }
 
+
+    //Public methods:
     @Override
     public boolean checkAuthenticated() {
         return false;
@@ -20,9 +23,7 @@ public class Guest extends User{
     public void setPassword(String password) {}
 
     @Override
-    public void order(String item, int orderAmount) {
-
-    }
+    public void order(String item, int orderAmount) {}
 
 
 }

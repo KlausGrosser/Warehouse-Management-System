@@ -20,8 +20,10 @@ import java.util.List;
  */
 public class OrderRepository {
 
+    //Fields:
     private static final List<Order> ORDER_LIST = new ArrayList<Order>();
 
+    //Static methods:
     /**
      * Load order, records from the order.json file
      */
@@ -67,6 +69,7 @@ public class OrderRepository {
         }
     }
 
+    //Getters:
     /**
      * Get All orders
      *
@@ -75,8 +78,5 @@ public class OrderRepository {
     public static List<Order> getAllOrders() {
         return ORDER_LIST;
     }
-
-
-
 
 }

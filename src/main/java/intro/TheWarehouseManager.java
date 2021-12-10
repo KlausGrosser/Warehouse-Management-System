@@ -56,26 +56,6 @@ public class TheWarehouseManager extends WarehouseRepository {
     }
 
     /**
-    Prints an error message if the entered option is not valid.
-     */
-    private void printErrorMessage(int choice, String input, int numOfOptions){
-        if (choice < 1 || choice > this.userOptions.length || !input.matches("[0-9]+[\\.]?[0-9]*")) {
-            if(input.isBlank()){
-                System.out.println("\n**************************************************\n" +
-                        "No option selected. Please enter a number between 1 and " + numOfOptions +"!\n" +
-                        "**************************************************");
-                System.out.print("Type the number of the operation: ");
-            }else {
-                System.out.println("\n**************************************************\n" +
-                        "\"" + input + "\" is not a valid operation. Please enter a number between 1 and " + numOfOptions + "!\n" +
-                        "**************************************************");
-                System.out.print("Type the number of the operation: ");
-            }
-        }
-
-    }
-
-    /**
      * Initiate an action based on given option
      */
     public void performAction(int option) {
@@ -114,8 +94,6 @@ public class TheWarehouseManager extends WarehouseRepository {
         return choice.startsWith("y");
     }
 
-
-
     /**
      * End the application
      */
@@ -129,7 +107,24 @@ public class TheWarehouseManager extends WarehouseRepository {
     // Private Methods
     // =====================================================================================
 
-
+    /**
+     Prints an error message if the entered option is not a valid number.
+     */
+    private void printErrorMessage(int choice, String input, int numOfOptions){
+        if (choice < 1 || choice > this.userOptions.length || !input.matches("[0-9]+[\\.]?[0-9]*")) {
+            if(input.isBlank()){
+                System.out.println("\n**************************************************\n" +
+                        "No option selected. Please enter a number between 1 and " + numOfOptions +"!\n" +
+                        "**************************************************");
+                System.out.print("Type the number of the operation: ");
+            }else {
+                System.out.println("\n**************************************************\n" +
+                        "\"" + input + "\" is not a valid operation. Please enter a number between 1 and " + numOfOptions + "!\n" +
+                        "**************************************************");
+                System.out.print("Type the number of the operation: ");
+            }
+        }
+    }
     /**
      * Get user's name via CLI
      */
@@ -158,7 +153,6 @@ public class TheWarehouseManager extends WarehouseRepository {
         return password;
     }
 
-
     private void printNumberOfItemsByWarehouse() {
         System.out.println();
         for (int warehouse : getWarehouses()) {
@@ -173,9 +167,7 @@ public class TheWarehouseManager extends WarehouseRepository {
         }
         printNumberOfItemsByWarehouse();
         SESSION_ACTIONS.add("Listed "+getTotalListedItems(WarehouseRepository.getAllItems())+" items.");
-
     }
-
 
     private int getTotalListedItems(List<Item> masterList){
         return masterList.size();
@@ -202,7 +194,6 @@ public class TheWarehouseManager extends WarehouseRepository {
             }
         }while(!found);
 
-
         if(this.checkItem(itemName)){
             printAmountAvailable(itemName.toLowerCase());
             printLocations(itemName.toLowerCase());
@@ -213,7 +204,6 @@ public class TheWarehouseManager extends WarehouseRepository {
             }
         }
     }
-
 
     private boolean hasVowel(String itemName) {
         switch (itemName.charAt(0)) {
@@ -403,7 +393,6 @@ public class TheWarehouseManager extends WarehouseRepository {
         return orderAmount;
     }
 
-
     private void browseByCategory() {
         Map<Integer, String> menu = createCategoryMenu();
         System.out.println("\nCategories: ");
@@ -413,7 +402,6 @@ public class TheWarehouseManager extends WarehouseRepository {
 
         SESSION_ACTIONS.add("Browsed the category "+menu.get(choice));
     }
-
 
     private int amountOfItemsPerCategory(String category){
         return getItemsByCategory(category).size();
@@ -435,7 +423,6 @@ public class TheWarehouseManager extends WarehouseRepository {
             System.out.printf("%d. %s (%d)%n", entry.getKey(), entry.getValue(), amountOfItemsPerCategory(entry.getValue()));
         }
     }
-
 
     private int chooseCategory(){
         int choice = 0;

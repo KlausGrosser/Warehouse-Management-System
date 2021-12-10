@@ -6,7 +6,7 @@ public class OrderItem {
     private String itemName;
     private int amount;
 
-    //Constructor:
+    //Constructors:
     public OrderItem(){};
 
     public OrderItem(String itemName, int amount) {

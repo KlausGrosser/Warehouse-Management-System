@@ -14,10 +14,12 @@ public class AdminServiceImpl implements AdminService{
     // To read inputs from the console/CLI
     //private Scanner reader = new Scanner(System.in);
 
+    //Fields:
     private String[] adminOptions = { "1. List orders by warehouse", "2. List orders by status",
             "3. List Orders whose total cost greater than provided value", "4. Quit" };
 
 
+    //Public methods:
     @Override
     public void authenticateAdmin() {
         // TODO implement
@@ -30,10 +32,7 @@ public class AdminServiceImpl implements AdminService{
         if(UserRepository.isAdminValid(TheWarehouseApp.SESSION_USER.getName(), TheWarehouseApp.SESSION_USER.getPassword())){
             TheWarehouseApp.SESSION_USER.setAuthenticated(true);
         }
-
         //set the SESSION_USER's isAuthenticated property to true.
-
-
     }
 
     @Override
@@ -60,7 +59,6 @@ public class AdminServiceImpl implements AdminService{
                 System.out.printf("Sorry! Enter an integer between 1 and %d. ", this.adminOptions.length);
             }
         } while (choice < 1 || choice > adminOptions.length);
-
         // return the valid choice
         return choice;
     }
@@ -111,10 +109,8 @@ public class AdminServiceImpl implements AdminService{
                 ordersByWarehouse.add(order);
             }
         }
-
         // use the printsListOfOrdersToConsole method and pass the created list as argument.
         this.printsListOfOrdersToConsole(ordersByWarehouse);
-
         //Add the action detail string to the SESSION_ACTIONS in TheWarehouseApp. Eg: 'Listed Orders of warehouse ' + {warehouseId}
         SESSION_ACTIONS.add("Listed Orders of warehouse "+id+".");
     }
@@ -129,8 +125,6 @@ public class AdminServiceImpl implements AdminService{
         System.out.println("2. PROCESSING");
         System.out.println("3. DELIVERED");
         System.out.print("Choose 1, 2 or 3: ");
-
-
         // prompt user to select 1, 2 or 3 unless valid choice is made.
         do {
             String selectedOption = TheWarehouseManager.reader.nextLine();
@@ -144,9 +138,7 @@ public class AdminServiceImpl implements AdminService{
                 System.out.print("Sorry! Enter an integer between 1 and 3: ");
             }
         } while (choice < 1 || choice > 3);
-
         String status = "";
-
         switch(choice) {
             case 1:
                 status = "NEW";
@@ -159,22 +151,17 @@ public class AdminServiceImpl implements AdminService{
                 break;
             default:
                 break;
-
         }
-
         //initialize  new empty list of order
         List<Order> orders = new ArrayList<>();
-
         //iterate over all the orders from OrderRepository and add only the orders with desired status to the list
         for (Order order : OrderRepository.getAllOrders()) {
             if(order.getStatus().equals(status)){
                 orders.add(order);
             }
         }
-
         // use the printsListOfOrdersToConsole method and pass the created list as argument.
         this.printsListOfOrdersToConsole(orders);
-
         //Add the action detail string to the SESSION_ACTIONS in TheWarehouseApp. Eg: 'Listed Orders with status ' + {status}
         SESSION_ACTIONS.add("Listed Orders with status: "+status+".");
     }
@@ -182,33 +169,26 @@ public class AdminServiceImpl implements AdminService{
     @Override
     public void listOrdersWhoseTotalCostGreaterThan() {
         // TODO implement
-
         double choice = 0;
-
         //prompt user to enter marginal value for total cost until a valid numerical value is entered.
         System.out.print("Enter value of total cost: ");
         int value = 0;
         do {
              value = Integer.parseInt(TheWarehouseManager.reader.nextLine());
         }while(value <=0);
-
         //initialize an empty list of orders
         List<Order> orders = new ArrayList<>();
-
         //iterate over all the orders from OrderRepository and add only the orders that meets the criteria to the list
     for (Order order : OrderRepository.getAllOrders()){
         if(order.getTotalCost() >= value){
             orders.add(order);
         }
     }
-
         // use the printsListOfOrdersToConsole method and pass the created list as argument.
         this.printsListOfOrdersToConsole(orders);
-
         //Add the action detail string to the SESSION_ACTIONS in TheWarehouseApp. Eg: 'Listed Orders with total cost greater than ' + {marginalValue}
         SESSION_ACTIONS.add("Listed Orders of "+value+" euros and more.");
     }
-
 
     @Override
     public void printsListOfOrdersToConsole(List<Order> orders) {
@@ -222,20 +202,13 @@ public class AdminServiceImpl implements AdminService{
             System.out.println( "orderItems : " + order.getOrderItems());
             System.out.println("================================================================================================================================");
         }
-
     }
 
     @Override
     public void quit() {
         // TODO implement
-
         //implement as similar to TheWarehouseManager.quit();
         TheWarehouseApp.SESSION_USER.bye();
-
         System.exit(0);
-
     }
-
-
-
 }

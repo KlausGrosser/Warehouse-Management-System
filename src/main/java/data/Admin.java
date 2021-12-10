@@ -37,13 +37,11 @@ public class Admin extends User{
         return this.role;
     }
 
+    //Public methods:
     @Override
     public void order(String name, int amount) {
         System.out.printf("\nOrdered %d %s%s", amount, name,(amount == 1 ? "" : TheWarehouseManager.checkPluralOrder(name.toLowerCase())));
     }
-
-
-
 
     @Override
     public void greet(){

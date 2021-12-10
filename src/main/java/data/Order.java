@@ -51,10 +51,4 @@ public class Order {
         return this.dateOfOrder;
     }
 
-
-    //Private Methods:
-
-    //Public Methods:
-
-
 }

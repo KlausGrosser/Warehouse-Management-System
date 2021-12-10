@@ -21,10 +21,12 @@ import java.util.Set;
  */
 public class UserRepository {
 
+    //Fields:
     private static final List<Employee> EMPLOYEE_LIST = new ArrayList<Employee>();
 
     private static final List<Employee> ADMIN_LIST = new ArrayList<Employee>();
 
+    //Static methods:
     /**
      * Load employee, records from the personnel.json file
      */
@@ -65,6 +67,7 @@ public class UserRepository {
         }
     }
 
+    //Getters:
     /**
      * Get All persons
      *
@@ -78,6 +81,7 @@ public class UserRepository {
         return ADMIN_LIST;
     }
 
+    //Public methods:
     public static boolean isUserValid(String userName, String password) {
         for(Employee employee : getAllEmployees()) {
             if(isUserEmployee(userName)) {

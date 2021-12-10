@@ -18,10 +18,11 @@ import org.json.simple.JSONValue;
  */
 public class WarehouseRepository {
 
-
+    //Fields:
     public static List<Warehouse> WAREHOUSE_LIST = new ArrayList<Warehouse>();
     private static List<Integer> WAREHOUSE_IDS = new ArrayList<Integer>();
 
+    //Static methods:
     /**
      * Load item records from the stock.json file
      */
@@ -79,16 +80,14 @@ public class WarehouseRepository {
         }
     }
 
+    //Getters:
     /**
      * Get All items available in the repository
      *
      * @return
      */
-
     public static List<Item> getAllItems() {
-
         List<Item> allItems = new ArrayList<Item>();
-
         //for(Warehouse warehouse : WAREHOUSE_LIST) {
         for(int i=0; i < WAREHOUSE_LIST.size(); i++) {
             List<Item> itemsWarehouse = new ArrayList<Item>();
@@ -148,7 +147,6 @@ public class WarehouseRepository {
      *
      * @return
      */
-
     public static Set<String> getCategories() {
         Set<String> categories = new HashSet<String>();
         for (Item item : getAllItems()) {
@@ -191,9 +189,7 @@ public class WarehouseRepository {
                 return item1.compareTo(item2);
             }
         });
-
         return items;
     }
-
 
 }

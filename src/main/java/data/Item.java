@@ -8,6 +8,7 @@ import java.util.Date;
  *
  */
 public class Item implements Comparable<Item> {
+  //Fields:
   /**
    * Current state of the item
    */
@@ -25,7 +26,7 @@ public class Item implements Comparable<Item> {
    */
   private Date dateOfStock;
 
-  //Constructor
+  //Constructors:
   public Item(){}
 
   public Item(String state, String category, int warehouse, Date dateOfStock){
@@ -36,7 +37,7 @@ public class Item implements Comparable<Item> {
   }
 
 
-  // setters and getters
+  // Setters and getters:
   public String getState() {
     return state;
   }
@@ -62,6 +63,7 @@ public class Item implements Comparable<Item> {
     this.dateOfStock = dateOfStock;
   }
 
+  //Public methods:
   /**
    * Textual representation of the item.
    * It's a combination of the state followed by the category
